@@ -8,9 +8,14 @@ on:
         description: "The packages to test that are dependent on us"
         default: "swift-libp2p/swift-libp2p"
 
+## Cancel previously triggered workflow runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-providers
+  cancel-in-progress: true
+
 jobs:
   test-dependents:
-    if: contains(github.event.pull_request.labels.*.name, 'approved')
+    if: contains(github.event.pull_request.labels.*.name, 'dependency-check')
     strategy:
       fail-fast: false
       matrix:
