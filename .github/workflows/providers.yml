@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   test-dependents:
+    # Requires the PR to have a 'dependency-check' label (default color #F6AC33)
     if: contains(github.event.pull_request.labels.*.name, 'dependency-check')
     strategy:
       fail-fast: false
