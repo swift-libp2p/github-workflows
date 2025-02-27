@@ -6,7 +6,7 @@ on:
       dependents:
         type: string
         description: "The packages to test that are dependent on us"
-        default: "swift-libp2p/swift-libp2p"
+        default: "[\"swift-libp2p/swift-libp2p\"]"
 
 ## Cancel previously triggered workflow runs
 concurrency:
@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        provider: ${{dependents}}
+        provider: ${{ fromJson(inputs.dependents) }}
         os: [ubuntu-latest, macos-latest]
         swift-version: ['6.0']
     runs-on: ${{ matrix.os }}
