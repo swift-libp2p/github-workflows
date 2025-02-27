@@ -1,0 +1,59 @@
+# This workflow is intended to be adopted by all repositories in the swift-libp2p org
+
+name: Pull Request
+
+# Controls when the workflow will run
+on:
+  workflow_call:
+    inputs:
+      test_in_release_configuration:
+        type: boolean
+        description: "Boolean to enable building and testing in release mode (as opposed to debug mode). Defaults to false (debug mode)."
+        default: false
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  soundness:
+    name: Soundness
+    uses: swiftlang/github-workflows/.github/workflows/soundness.yml@main
+    with:
+      license_header_check_project_name: "swift-libp2p"
+
+  tests-linux:
+    name: Tests-Linux
+    uses: swiftlang/github-workflows/.github/workflows/swift_package_test.yml@main
+    with:
+      # Disable windows builds for the time being
+      enable_windows_checks: false
+      # Pass the configuration flags for linux builds and tests
+      swift_flags: ${{ inputs.test_in_release_configuration && '-c release -v -Xswiftc -enable-testing' || '-v' }}
+      swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -v -Xswiftc -enable-testing' || '-v' }}
+
+  # Implement our own MacOS tests until swiftlang adds support for it
+  test-macos:
+    name: Tests-MacOS
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+        # Test on the latest 3 versions of Swift
+        swift-version: ["6.0", "5.10", "5.9"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: ${{ matrix.swift-version }}
+      - name: Get swift version
+        run: swift --version
+      # Build in debug mode with verbosity enabled
+      - name: Build
+        run: swift build -v
+      # Test in debug mode with verbosity enabled
+      - name: Test Debug
+        if: ${{ !inputs.test_in_release_configuration }}
+        run: swift test -v
+      # Test in release mode with verbosity enabled
+      - name: Test Release
+        if: ${{ inputs.test_in_release_configuration }}
+        run: swift test -c release -v -Xswiftc -enable-testing
