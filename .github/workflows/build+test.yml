@@ -8,7 +8,7 @@ on:
         description: "Boolean to enable building and testing in release mode (as opposed to debug mode). Defaults to false (debug mode)."
         default: false
 
-## We are cancelling previously triggered workflow runs
+## Cancel previously triggered workflow runs
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-build-test
   cancel-in-progress: true
