@@ -44,4 +44,4 @@ jobs:
       - name: Run tests
         env:
             SWIFT_DETERMINISTIC_HASHING: 1
-        run: swift test --package-path ./provider
+        run: swift test --package-path ./provider --configuration release -Xswiftc -enable-testing
