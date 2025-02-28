@@ -10,10 +10,6 @@ on:
         type: string
         description: "Path to a file that will be passed as --breakage-allowlist-path to swift package diagnose-api-breaking-changes"
         default: ""
-      unacceptable_language_check_word_list:
-        type: string
-        description: "List of unacceptable words. Defaults to a sensible list of words."
-        default: "blacklist whitelist slave master sane sanity insane insanity kill killed killing hang hung hanged hanging"  # ignore-unacceptable-language
       test_in_release_configuration:
         type: boolean
         description: "Boolean to enable building and testing in release mode (as opposed to debug mode). Defaults to false (debug mode)."
@@ -26,7 +22,7 @@ jobs:
     uses: swiftlang/github-workflows/.github/workflows/soundness.yml@main
     with:
       api_breakage_check_allowlist_path: ${{ inputs.api_breakage_check_allowlist_path }}
-      unacceptable_language_check_word_list: ${{ inputs.unacceptable_language_check_word_list }}
+      unacceptable_language_check_word_list: "blacklist whitelist slave sane sanity insane insanity kill killed killing hang hung hanged hanging"
       license_header_check_project_name: "swift-libp2p"
 
   tests-linux:
