@@ -38,8 +38,8 @@ jobs:
       # Disable windows builds for the time being
       enable_windows_checks: false
       # Pass the configuration flags for linux builds and tests
-      swift_flags: ${{ inputs.test_in_release_configuration && '-c release -v -Xswiftc -enable-testing' || '-v' }}
-      swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -v -Xswiftc -enable-testing' || '-v' }}
+      swift_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
+      swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
 
   # Implement our own MacOS tests until swiftlang adds support for it
   test-macos:
@@ -59,14 +59,14 @@ jobs:
           swift-version: ${{ matrix.swift-version }}
       - name: Get swift version
         run: swift --version
-      # Build in debug mode with verbosity enabled
+      # Build in debug mode
       - name: Build
-        run: swift build -v
-      # Test in debug mode with verbosity enabled
+        run: swift build
+      # Test in debug mode
       - name: Test Debug
         if: ${{ !inputs.test_in_release_configuration }}
-        run: swift test -v
-      # Test in release mode with verbosity enabled
+        run: swift test
+      # Test in release mode
       - name: Test Release
         if: ${{ inputs.test_in_release_configuration }}
-        run: swift test -c release -v -Xswiftc -enable-testing
+        run: swift test -c release -Xswiftc -enable-testing
