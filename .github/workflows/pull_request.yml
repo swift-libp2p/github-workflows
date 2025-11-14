@@ -38,7 +38,7 @@ jobs:
       # Disable windows builds for the time being
       enable_windows_checks: false
       # Exclude swift 5.9 and 5.10
-      linux_exclude_swift_versions: "[\"5.9\", \"5.10\"]"
+      linux_exclude_swift_versions: "[{\"swift_version\": \"5.9\"}, {\"swift_version\": \"5.10\"}]"
       # Pass the configuration flags for linux builds and tests
       swift_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
       swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
