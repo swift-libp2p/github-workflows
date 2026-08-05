@@ -30,11 +30,11 @@ jobs:
         with:
           swift-version: '${{ matrix.swift-version }}'
       - name: Check out ${{ github.event.repository.name }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: ${{ github.event.repository.name }}
       - name: Check out provider
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.provider }}
           path: provider
