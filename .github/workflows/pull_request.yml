@@ -37,8 +37,7 @@ jobs:
     with:
       # Disable windows builds for the time being
       enable_windows_checks: false
-      # Exclude swift 5.9 and 5.10
-      linux_exclude_swift_versions: "[{\"swift_version\": \"5.9\"}, {\"swift_version\": \"5.10\"}]"
+      linux_swift_versions: "[ \"6.0\", \"6.1\", \"6.2\", \"6.3\", \"6.4\", \"nightly-main\", \"nightly-6.4.x\"]"
       # Pass the configuration flags for linux builds and tests
       swift_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
       swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
@@ -52,7 +51,7 @@ jobs:
       matrix:
         os: [macos-latest]
         # Test on the latest 4 versions of Swift (skip 6.0 and 6.1 due to build errors)
-        swift-version: ["6.2", "6.3"]
+        swift-version: ["6.2", "6.3", "6.4"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
