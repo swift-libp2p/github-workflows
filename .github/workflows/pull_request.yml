@@ -37,7 +37,6 @@ jobs:
     with:
       # Disable windows builds for the time being
       enable_windows_checks: false
-      linux_swift_versions: "[\"6.0\", \"6.1\", \"6.2\", \"6.3\", \"6.4\", \"nightly-main\", \"nightly-6.4.x\"]"
       # Pass the configuration flags for linux builds and tests
       swift_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
       swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
