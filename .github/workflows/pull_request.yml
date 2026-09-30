@@ -18,6 +18,10 @@ on:
         type: boolean
         description: "Boolean to enable building and testing in release mode (as opposed to debug mode). Defaults to false (debug mode)."
         default: false
+      extra_swift_flags:
+        type: string
+        description: "Additional flags passed to swift build/test (e.g. '--traits TestDependencies')"
+        default: ""
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -38,8 +42,8 @@ jobs:
       # Disable windows builds for the time being
       enable_windows_checks: false
       # Pass the configuration flags for linux builds and tests
-      swift_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
-      swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }}
+      swift_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }} ${{ inputs.extra_swift_flags }}
+      swift_nightly_flags: ${{ inputs.test_in_release_configuration && '-c release -Xswiftc -enable-testing' || '' }} ${{ inputs.extra_swift_flags }}
 
   # Implement our own MacOS tests until swiftlang adds support for it
   test-macos:
@@ -61,12 +65,12 @@ jobs:
         run: swift --version
       # Build in debug mode
       - name: Build
-        run: swift build
+        run: swift build ${{ inputs.extra_swift_flags }}
       # Test in debug mode
       - name: Test Debug
         if: ${{ !inputs.test_in_release_configuration }}
-        run: swift test
+        run: swift test ${{ inputs.extra_swift_flags }}
       # Test in release mode
       - name: Test Release
         if: ${{ inputs.test_in_release_configuration }}
-        run: swift test -c release -Xswiftc -enable-testing
+        run: swift test -c release -Xswiftc -enable-testing ${{ inputs.extra_swift_flags }}
