@@ -7,6 +7,10 @@ on:
         type: boolean
         description: "Boolean to enable building and testing in release mode (as opposed to debug mode). Defaults to false (debug mode)."
         default: false
+      extra_swift_flags:
+        type: string
+        description: "Additional flags passed to swift build/test (e.g. '--traits TestDependencies')"
+        default: ""
 
 ## Cancel previously triggered workflow runs
 concurrency:
@@ -33,16 +37,16 @@ jobs:
       # Build in debug mode with verbosity enabled
       - name: Build Debug
         if: ${{ !inputs.test_in_release_configuration }}
-        run: swift build -v
+        run: swift build -v ${{ inputs.extra_swift_flags }}
       # Build in release mode with verbosity enabled
       - name: Build Release
         if: ${{ inputs.test_in_release_configuration }}
-        run: swift build -c release -v
+        run: swift build -c release -v ${{ inputs.extra_swift_flags }}
       # Test in debug mode with verbosity enabled
       - name: Test Debug
         if: ${{ !inputs.test_in_release_configuration }}
-        run: swift test -v
+        run: swift test -v ${{ inputs.extra_swift_flags }}
       # Test in release mode with verbosity enabled
       - name: Test Release
         if: ${{ inputs.test_in_release_configuration }}
-        run: swift test -c release -v -Xswiftc -enable-testing
+        run: swift test -c release -v -Xswiftc -enable-testing ${{ inputs.extra_swift_flags }}
